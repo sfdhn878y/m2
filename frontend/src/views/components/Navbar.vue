@@ -1,23 +1,93 @@
 <template>
-    <div class="navbar">
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        <a href="/manage_course">Manage Course</a>
-        <a href="/manage_examination">Manage Examination</a>
-        <a href="/manage_examinor">Manage Examinor</a>
-    
+  <nav>
+    <div class="nav-brand">ExamPortal</div>
+    <div class="nav-links">
+      <template v-if="loggedIn">
+        <template v-if="role === 'admin'">
+          <a href="/admin" :class="{ active: path === '/admin' }">Home</a>
+          <a href="/manage_course" :class="{ active: path === '/manage_course' }">Manage Course</a>
+          <a href="/manage_examination" :class="{ active: path === '/manage_examination' }">Manage Examination</a>
+          <a href="/manage_examinor" :class="{ active: path === '/manage_examinor' }">Manage Examinor</a>
+        </template>
+
+        <template v-else-if="role === 'examinor'">
+          <a href="/manage_examination" :class="{ active: path === '/manage_examination' }">Home</a>
+        </template>
+
+        <template v-else>
+          <a href="/" >Home</a>
+        </template>
+
+        <button class="logout-btn" @click.prevent="logout">Logout</button>
+      </template>
+
+      <template v-else>
+        <a href="/login" >Login</a>
+        <a href="/register" >Signup</a>
+      </template>
     </div>
+  </nav>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+
+const path = window.location.pathname
+const loggedIn = ref(!!localStorage.getItem('token'))
+const role = ref(localStorage.getItem('role') || '')
+
+const logout = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('role')
+  localStorage.removeItem('name')
+  loggedIn.value = false
+  role.value = ''
+  window.location.href = '/login'
+}
+</script>
+
 <style scoped>
-.navbar{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color:greenyellow;
-    color: red;
-    padding: 10px;
-    border-radius: 5px;
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #1f2937;
+  color: #fff;
+}
+.nav-brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: #34d399;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+a:hover {
+  color: #fff;
+}
+a.active {
+  color: #34d399;
+  font-weight: 600;
+}
+.logout-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.logout-btn:hover {
+  background: #dc2626;
 }
 </style>
