@@ -4,11 +4,12 @@
         <h1>Manage Rubric</h1>
         <p v-if="exam_name">Examination: {{ exam_name }}</p>
 
-        <form @submit.prevent="create_rubric">
+        <form @submit.prevent="save_rubric">
             <input type="text" v-model="criterion" placeholder="Criterion" required>
             <input type="text" v-model="description" placeholder="Description" required>
             <input type="number" v-model="marks" placeholder="Marks" required>
-            <button type="submit">Add Rubric</button>
+            <button type="submit">{{ editing_id ? 'Update Rubric' : 'Add Rubric' }}</button>
+            <button v-if="editing_id" type="button" @click="cancel_edit">Cancel</button>
         </form>
         <p>{{ message }}</p>
 
@@ -27,6 +28,7 @@
                     <td>{{ rubric.description }}</td>
                     <td>{{ rubric.marks }}</td>
                     <td>
+                        <button @click="start_edit(rubric)">Edit</button>
                         <button @click="delete_rubric(rubric.id)">Delete</button>
                     </td>
                 </tr>
@@ -47,6 +49,7 @@ const marks = ref('')
 const message = ref('')
 const exam_name = ref('')
 const rubric_list = ref([])
+const editing_id = ref(null)
 
 const fetch_rubrics = async () => {
     const response = await axios.get(`http://127.0.0.1:5000/provide_rubric_details/${examination_id}`)
@@ -54,16 +57,35 @@ const fetch_rubrics = async () => {
     exam_name.value = response.data.exam_name
 }
 
-const create_rubric = async () => {
-    const response = await axios.post(`http://127.0.0.1:5000/create_rubric/${examination_id}`, {
-        criterion: criterion.value,
-        description: description.value,
-        marks: marks.value
-    })
-    message.value = response.data.message
+const clear_form = () => {
     criterion.value = ''
     description.value = ''
     marks.value = ''
+    editing_id.value = null
+}
+
+const start_edit = (rubric) => {
+    editing_id.value = rubric.id
+    criterion.value = rubric.criterion
+    description.value = rubric.description
+    marks.value = rubric.marks
+}
+
+const cancel_edit = () => {
+    clear_form()
+}
+
+const save_rubric = async () => {
+    const payload = {
+        criterion: criterion.value,
+        description: description.value,
+        marks: marks.value
+    }
+    const response = editing_id.value
+        ? await axios.post(`http://127.0.0.1:5000/edit_rubric/${editing_id.value}`, payload)
+        : await axios.post(`http://127.0.0.1:5000/create_rubric/${examination_id}`, payload)
+    message.value = response.data.message
+    clear_form()
     fetch_rubrics()
 }
 

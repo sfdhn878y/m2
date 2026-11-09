@@ -317,6 +317,16 @@ def create_rubric(exam_id):
     db.session.commit()
     return jsonify({'message': 'Rubric created successfully'})
 
+@app.route('/edit_rubric/<int:id>', methods=['POST'])
+def edit_rubric(id):
+    data = request.json
+    rubric = Rubric.query.filter_by(id=id).first()
+    rubric.criterion = data['criterion']
+    rubric.description = data['description']
+    rubric.marks = data['marks']
+    db.session.commit()
+    return jsonify({'message': 'Rubric updated successfully'})
+
 @app.route('/delete_rubric/<int:id>', methods=['POST'])
 def delete_rubric(id):
     rubric = Rubric.query.filter_by(id=id).first()
