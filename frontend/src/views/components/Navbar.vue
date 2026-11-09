@@ -4,14 +4,14 @@
     <div class="nav-links">
       <template v-if="loggedIn">
         <template v-if="role === 'admin'">
-          <a href="/admin" :class="{ active: path === '/admin' }">Home</a>
-          <a href="/manage_course" :class="{ active: path === '/manage_course' }">Manage Course</a>
-          <a href="/manage_examination" :class="{ active: path === '/manage_examination' }">Manage Examination</a>
-          <a href="/manage_examinor" :class="{ active: path === '/manage_examinor' }">Manage Examinor</a>
+          <a href="/admin">Home</a>
+          <a href="/manage_course" >Manage Course</a>
+          <a href="/manage_examination" >Manage Examination</a>
+          <a href="/manage_examinor" >Manage Examinor</a>
         </template>
 
         <template v-else-if="role === 'examinor'">
-          <a href="/manage_examination" :class="{ active: path === '/manage_examination' }">Home</a>
+          <a href="/manage_examination" >Home</a>
         </template>
 
         <template v-else>

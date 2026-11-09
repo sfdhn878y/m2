@@ -9,6 +9,8 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Blocked</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -17,8 +19,10 @@
             <td>{{ examinor.email }}</td>
             <td>{{ examinor.role }}</td>
             <td>{{ examinor.is_blocked }}</td>
-            <button @click="block_examinor(examinor.id)" >Block</button>
-            <button @click="unblock_examinor(examinor.id)" >Unblock</button>
+            <td>
+              <button @click="block_examinor(examinor.id)">Block</button>
+              <button @click="unblock_examinor(examinor.id)">Unblock</button>
+            </td>
           </tr>
         </tbody>
       </table>

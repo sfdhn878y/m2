@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div>
       <h1>Manage Examination</h1>
   
@@ -11,6 +12,7 @@
             <th>Slot Creation End</th>
             <th>Booking Start</th>
             <th>Booking End</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +23,11 @@
             <td>{{ examination.examinor_slot_create_end_date }}</td>
             <td>{{ examination.booking_start_time }}</td>
             <td>{{ examination.booking_end_time }}</td>
-            <button @click="create_questionbank(examination.id)">Create Question Bank</button>
+            <td>
+              <button @click="create_questionbank(examination.id)">Create Question Bank</button>
+              <br>
+              <button @click="manage_rubric(examination.id)">Manage Rubric</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -45,6 +51,10 @@ const fetchExaminationDetails = async () => {
 
 const create_questionbank = async(examination_id)=>{
   router.push(`/create-questionbank/${examination_id}`)
+}
+
+const manage_rubric = async(examination_id)=>{
+  router.push(`/manage-rubric/${examination_id}`)
 }
 
 onMounted(() => {

@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div>
         <h1>Create Course</h1>
     </div>
@@ -11,6 +12,7 @@
     </form>
 </template>
 <script setup>
+import Navbar from './components/Navbar.vue'
 import { ref } from 'vue';
 const courseName = ref('');
 const courseDescription = ref('');

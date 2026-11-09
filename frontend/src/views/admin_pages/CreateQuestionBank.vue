@@ -1,9 +1,10 @@
 <template>
+    <Navbar />
     <div>
         <h1>Create Question Bank</h1>
         <form @submit.prevent="create_questionbank">
-            <input type="text" v-model="question">
-            <input type="text" v-model="makrs">
+            <input type="text" v-model="question" placeholder="Question">
+            <input type="text" v-model="makrs" placeholder="Marks">
           
             <button type="submit">Create</button>
         </form>

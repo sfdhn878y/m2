@@ -59,14 +59,22 @@ class Exam(db.Model):
     booking_end_time = db.Column(db.String(100), nullable=False)
     exam_start_date = db.Column(db.String(100), nullable=False)
     exam_end_date = db.Column(db.String(100), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='CASCADE'), nullable=False)
     examinor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(100), nullable=False)
     marks = db.Column(db.Integer, nullable=False)
-    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id'), nullable=False)
+    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id', ondelete='CASCADE'), nullable=False)
+
+
+class Rubric(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    criterion = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    marks = db.Column(db.Integer, nullable=False)
+    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id', ondelete='CASCADE'), nullable=False)
 
 
 
@@ -187,8 +195,13 @@ def create_exam():
     data = request.json
     print(data)
 
+    exam_name = data['exam_name'].strip()
+    old_exam = Exam.query.filter(db.func.lower(Exam.exam_name) == exam_name.lower()).first()
+    if old_exam:
+        return jsonify({'message': 'Exam already exists'})
+
     new_exam = Exam(
-        exam_name=data['exam_name'],
+        exam_name=exam_name,
         exam_description=data['exam_description'],
         examinor_slot_create_start_date=data['examinor_slot_create_start_date'],
         examinor_slot_create_end_date=data['examinor_slot_create_end_date'],
@@ -219,6 +232,11 @@ def examinor_register():
 @app.route('/delete_course/<int:id>',methods=['POST'])
 def delete_course(id):
     course = Course.query.filter_by(id=id).first()
+    exams = Exam.query.filter_by(course_id=id).all()
+    for exam in exams:
+        Question.query.filter_by(exam_id=exam.id).delete()
+        Rubric.query.filter_by(exam_id=exam.id).delete()
+    Exam.query.filter_by(course_id=id).delete()
     db.session.delete(course)
     db.session.commit()
     return jsonify({'message': 'Course deleted successfully'})
@@ -267,6 +285,44 @@ def create_questionbank(exam_id):
     db.session.add(new_question)
     db.session.commit()
     return jsonify({'message': 'Question bank created successfully'})
+
+@app.route('/provide_rubric_details/<int:exam_id>', methods=['GET', 'POST'])
+def provide_rubric_details(exam_id):
+    exam = Exam.query.filter_by(id=exam_id).first()
+    rubrics = Rubric.query.filter_by(exam_id=exam_id).all()
+    rubric_list = []
+    for rubric in rubrics:
+        rubric_list.append({
+            'id': rubric.id,
+            'criterion': rubric.criterion,
+            'description': rubric.description,
+            'marks': rubric.marks,
+            'exam_id': rubric.exam_id
+        })
+    return jsonify({
+        'data': rubric_list,
+        'exam_name': exam.exam_name if exam else ''
+    })
+
+@app.route('/create_rubric/<int:exam_id>', methods=['POST'])
+def create_rubric(exam_id):
+    data = request.json
+    new_rubric = Rubric(
+        criterion=data['criterion'],
+        description=data['description'],
+        marks=data['marks'],
+        exam_id=exam_id
+    )
+    db.session.add(new_rubric)
+    db.session.commit()
+    return jsonify({'message': 'Rubric created successfully'})
+
+@app.route('/delete_rubric/<int:id>', methods=['POST'])
+def delete_rubric(id):
+    rubric = Rubric.query.filter_by(id=id).first()
+    db.session.delete(rubric)
+    db.session.commit()
+    return jsonify({'message': 'Rubric deleted successfully'})
 
 if __name__ == '__main__':
     with app.app_context():

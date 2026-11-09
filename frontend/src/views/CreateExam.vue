@@ -1,25 +1,45 @@
 <template>
+    <Navbar />
     <div>
         <h1>Create Examination</h1>
     </div>
-    {{ examinor_data_list }}
     <form @submit.prevent="createExam">
         <input type="text" v-model="examName" placeholder="Exam Name">
         <input type="text" v-model="examDescription" placeholder="Exam Description">
-        <input v-model='examinor_slot_create_start_date' placeholder="Slot Start Time">
-        <input v-model='examinor_slot_create_end_date' placeholder="Slot End Time">
-        <input v-model='booking_start_time' placeholder="Booking Start Time">
-        <input v-model='booking_end_time' placeholder="Booking End Time">
-        <input v-model='exam_start_date' placeholder="Exam Date">
-        <input v-model='exam_end_date' placeholder="Examinor Name">
+        <label>
+            Slot start date
+            <input type="date" v-model="examinor_slot_create_start_date" required>
+        </label>
+        <label>
+            Slot end date
+            <input type="date" v-model="examinor_slot_create_end_date" required>
+        </label>
+        <label>
+            Booking start date
+            <input type="date" v-model="booking_start_time" required>
+        </label>
+        <label>
+            Booking end date
+            <input type="date" v-model="booking_end_time" required>
+        </label>
+        <label>
+            Exam start date
+            <input type="date" v-model="exam_start_date" required>
+        </label>
+        <label>
+            Exam end date
+            <input type="date" v-model="exam_end_date" required>
+        </label>
 
         <select v-model="course_id">
+            <option disabled value="">Select course</option>
             <option v-for="course in course_data_list" :key="course.id" :value="course.id">
                 {{ course.name }}
             </option>
         </select>
 
-        <select v-model="examinor_id">
+        <select v-model="examinor_id" required>
+            <option disabled value="">Select examiner</option>
             <option v-for="examinor in examinor_data_list" :key="examinor.id" :value="examinor.id">
                 {{ examinor.name }}
             </option>
@@ -31,6 +51,7 @@
 </template>
 
 <script setup>
+import Navbar from './components/Navbar.vue'
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -88,4 +109,12 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #374151;
+}
+</style>

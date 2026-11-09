@@ -12,6 +12,7 @@ import EditCourse from '../views/admin_pages/EditCourse.vue'
 import ManageExaminor from '../views/admin_pages/ManageExaminor.vue'
 import ManageExamination from '../views/admin_pages/ManageExamination.vue'
 import CreateQuestionBank from '../views/admin_pages/CreateQuestionBank.vue'
+import ManageRubric from '../views/admin_pages/ManageRubric.vue'
 
 const routes = [
 
@@ -62,6 +63,10 @@ const routes = [
   {
     path: '/create-questionbank/:examination_id', // http://localhost:5173/create-questionbank/:examination_id
     component: CreateQuestionBank
+  },
+  {
+    path: '/manage-rubric/:examination_id', // http://localhost:5173/manage-rubric/:examination_id
+    component: ManageRubric
   }
 ]
 

@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div>
         <h1>Register</h1>
     </div>
@@ -9,9 +10,9 @@
         <p>{{ error }}</p>
     </div>
     <form @submit.prevent="register">
-        <input type="text" v-model="username">
-        <input type="email" v-model="email">
-        <input type="password" v-model="password">
+        <input type="text" v-model="username" placeholder="Username">
+        <input type="email" v-model="email" placeholder="Email">
+        <input type="password" v-model="password" placeholder="Password">
         <select v-model="role">
             <option value="user">User</option>
         </select>
@@ -20,6 +21,7 @@
 </template>
 
 <script setup>
+import Navbar from './components/Navbar.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 const username = ref('')

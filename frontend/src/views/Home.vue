@@ -58,14 +58,6 @@
 import Navbar from './components/Navbar.vue'
 </script>
 
-<style>
-body {
-  margin: 0;
-  background: #f3f6f4;
-  color: #1a1a1a;
-}
-</style>
-
 <style scoped>
 .home {
   max-width: 960px;

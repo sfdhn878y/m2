@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <div>
         <h1>Login</h1>
     </div>
@@ -10,7 +11,6 @@
   <p v-if="error">{{ error }}</p>
   <p v-if="response_data">{{ response_data }}</p>
   <p v-if="token">Token saved. {{ token }}</p>
-  <Navbar />
 </template>
 
 <script setup>
