@@ -11,7 +11,8 @@
         </template>
 
         <template v-else-if="role === 'examinor'">
-          <a href="/manage_examination" >Home</a>
+          <a href="/examinor" >Home</a>
+          <a href="/assigned_examination" >Assigned Examination</a>
         </template>
 
         <template v-else>
@@ -40,6 +41,7 @@ const logout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('role')
   localStorage.removeItem('name')
+  localStorage.removeItem('user_id')
   loggedIn.value = false
   role.value = ''
   window.location.href = '/login'

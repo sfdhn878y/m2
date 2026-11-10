@@ -27,6 +27,10 @@
               <button @click="create_questionbank(examination.id)">Create Question Bank</button>
               <br>
               <button @click="manage_rubric(examination.id)">Manage Rubric</button>
+              <br>
+              <button @click="toggle_slot(examination)">{{ examination.slot_open ? 'Close Slot' : 'Open Slot' }}</button>
+              <br>
+              <button @click="view_slot(examination.id)">View Slot</button>
             </td>
           </tr>
         </tbody>
@@ -55,6 +59,16 @@ const create_questionbank = async(examination_id)=>{
 
 const manage_rubric = async(examination_id)=>{
   router.push(`/manage-rubric/${examination_id}`)
+}
+
+const view_slot = (examination_id) => {
+  router.push(`/view_slot/${examination_id}`)
+}
+
+const toggle_slot = async (examination) => {
+  const path = examination.slot_open ? 'close_slot' : 'open_slot'
+  await axios.post(`http://127.0.0.1:5000/${path}/${examination.id}`)
+  fetchExaminationDetails()
 }
 
 onMounted(() => {

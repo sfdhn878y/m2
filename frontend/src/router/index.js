@@ -13,7 +13,10 @@ import ManageExaminor from '../views/admin_pages/ManageExaminor.vue'
 import ManageExamination from '../views/admin_pages/ManageExamination.vue'
 import CreateQuestionBank from '../views/admin_pages/CreateQuestionBank.vue'
 import ManageRubric from '../views/admin_pages/ManageRubric.vue'
-
+import Examinor from '../views/examinor/Examinor.vue'
+import AssignedExamination from '../views/examinor/AssignedExamination.vue'
+import CreateSlot from '../views/examinor/CreateSlot.vue'
+import ViewSlot from '../views/examinor/ViewSlot.vue'
 const routes = [
 
   {
@@ -67,6 +70,23 @@ const routes = [
   {
     path: '/manage-rubric/:examination_id', // http://localhost:5173/manage-rubric/:examination_id
     component: ManageRubric
+  },
+  {
+    path: '/examinor', // http://localhost:5173/examinor
+    component: Examinor
+  },
+  { 
+    path: '/assigned_examination', // http://localhost:5173/assigned_examination
+    component: AssignedExamination
+  }
+  ,
+  {
+    path: '/create_slot/:examination_id', // http://localhost:5173/create_slot/:examination_id
+    component: CreateSlot
+  },
+  {
+    path: '/view_slot/:examination_id', // http://localhost:5173/view_slot/:examination_id
+    component: ViewSlot
   }
 ]
 

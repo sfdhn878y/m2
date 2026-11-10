@@ -61,6 +61,7 @@ class Exam(db.Model):
     exam_end_date = db.Column(db.String(100), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='CASCADE'), nullable=False)
     examinor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    slot_open = db.Column(db.Boolean, default=False)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,6 +76,15 @@ class Rubric(db.Model):
     description = db.Column(db.String(200), nullable=False)
     marks = db.Column(db.Integer, nullable=False)
     exam_id = db.Column(db.Integer, db.ForeignKey('exam.id', ondelete='CASCADE'), nullable=False)
+
+
+class Slot(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    slot_date = db.Column(db.String(100), nullable=False)
+    slot_time = db.Column(db.String(100), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id', ondelete='CASCADE'), nullable=False)
+    examinor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 
@@ -117,7 +127,8 @@ def login():
         'message': 'Login successful',
         'token': token,
         'role': user.role,
-        'name': user.name
+        'name': user.name,
+        'user_id': user.id
     })
 
 
@@ -220,6 +231,22 @@ def create_exam():
 
 
 
+@app.route('/create_examinor_profile', methods=['POST'])
+def create_examinor_profile():
+    data = request.json
+    old_profile = Staff_Profile.query.filter_by(user_id=data['user_id']).first()
+    if old_profile:
+        return jsonify({'message': 'Profile already exists'})
+    new_profile = Staff_Profile(
+        address=data['address'],
+        phone=data['phone'],
+        past_experience=data['past_experience'],
+        user_id=data['user_id']
+    )
+    db.session.add(new_profile)
+    db.session.commit()
+    return jsonify({'message': 'Profile created successfully'})
+
 @app.route('/examinor_register',methods=['POST'])
 def examinor_register():
     data = request.json
@@ -236,6 +263,7 @@ def delete_course(id):
     for exam in exams:
         Question.query.filter_by(exam_id=exam.id).delete()
         Rubric.query.filter_by(exam_id=exam.id).delete()
+        Slot.query.filter_by(exam_id=exam.id).delete()
     Exam.query.filter_by(course_id=id).delete()
     db.session.delete(course)
     db.session.commit()
@@ -272,7 +300,8 @@ def provide_examination_details():
                 'exam_start_date': examination.exam_start_date,
                 'exam_end_date': examination.exam_end_date,
                 'course_id': examination.course_id,
-                'examinor_id': examination.examinor_id
+                'examinor_id': examination.examinor_id,
+                'slot_open': bool(examination.slot_open)
             }
         )
     return jsonify({'data': all_examinations_list})
@@ -334,9 +363,107 @@ def delete_rubric(id):
     db.session.commit()
     return jsonify({'message': 'Rubric deleted successfully'})
 
+@app.route('/create_slot/<int:exam_id>', methods=['POST'])
+def create_slot(exam_id):
+    data = request.json
+    exam = Exam.query.filter_by(id=exam_id).first()
+    if not exam:
+        return jsonify({'message': 'Examination not found'})
+
+    today = date.today()
+    slot_start = date.fromisoformat(str(exam.examinor_slot_create_start_date)[:10])
+    slot_end = date.fromisoformat(str(exam.examinor_slot_create_end_date)[:10])
+    in_window = slot_start <= today <= slot_end
+    if not in_window and not exam.slot_open:
+        return jsonify({'message': 'You can only create a slot between the slot start date and the slot end date'})
+
+    slot_date = date.fromisoformat(str(data['slot_date'])[:10])
+    exam_start = date.fromisoformat(str(exam.exam_start_date)[:10])
+    exam_end = date.fromisoformat(str(exam.exam_end_date)[:10])
+    if slot_date < exam_start or slot_date > exam_end:
+        return jsonify({'message': 'Slot date must be between the exam start date and the exam end date'})
+
+    new_slot = Slot(
+        slot_date=data['slot_date'],
+        slot_time=data['slot_time'],
+        capacity=data['capacity'],
+        exam_id=exam_id,
+        examinor_id=data['examinor_id']
+    )
+    db.session.add(new_slot)
+    db.session.commit()
+    return jsonify({'message': 'Slot created successfully'})
+
+@app.route('/provide_slot_details/<int:exam_id>', methods=['GET', 'POST'])
+def provide_slot_details(exam_id):
+    exam = Exam.query.filter_by(id=exam_id).first()
+    slots = Slot.query.filter_by(exam_id=exam_id).all()
+    slot_list = []
+    for slot in slots:
+        examinor = User.query.filter_by(id=slot.examinor_id).first()
+        slot_list.append({
+            'id': slot.id,
+            'slot_date': slot.slot_date,
+            'slot_time': slot.slot_time,
+            'capacity': slot.capacity,
+            'examinor_name': examinor.name if examinor else ''
+        })
+    return jsonify({
+        'data': slot_list,
+        'exam_name': exam.exam_name if exam else ''
+    })
+
+@app.route('/assigned_examination', methods=['POST'])
+def assigned_examination():
+    data = request.json
+    examinor_id = data['examinor_id']
+
+    exams = Exam.query.filter_by(examinor_id=examinor_id).all()
+    assigned = []
+    for examination in exams:
+        course = Course.query.filter_by(id=examination.course_id).first()
+        assigned.append({
+            'id': examination.id,
+            'name': examination.exam_name,
+            'description': examination.exam_description,
+            'examinor_slot_create_start_date': examination.examinor_slot_create_start_date,
+            'examinor_slot_create_end_date': examination.examinor_slot_create_end_date,
+            'booking_start_time': examination.booking_start_time,
+            'booking_end_time': examination.booking_end_time,
+            'exam_start_date': examination.exam_start_date,
+            'exam_end_date': examination.exam_end_date,
+            'course_id': examination.course_id,
+            'course_name': course.coures_name if course else '',
+            'examinor_id': examination.examinor_id,
+            'slot_open': bool(examination.slot_open)
+        })
+    return jsonify({'data': assigned, 'message': 'Assigned examinations'})
+
+@app.route('/open_slot/<int:exam_id>', methods=['POST'])
+def open_slot(exam_id):
+    exam = Exam.query.filter_by(id=exam_id).first()
+    if not exam:
+        return jsonify({'message': 'Examination not found'})
+    exam.slot_open = True
+    db.session.commit()
+    return jsonify({'message': 'Slot creation opened'})
+
+@app.route('/close_slot/<int:exam_id>', methods=['POST'])
+def close_slot(exam_id):
+    exam = Exam.query.filter_by(id=exam_id).first()
+    if not exam:
+        return jsonify({'message': 'Examination not found'})
+    exam.slot_open = False
+    db.session.commit()
+    return jsonify({'message': 'Slot creation closed'})
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        exam_columns = [row[1] for row in db.session.execute(db.text('PRAGMA table_info(exam)')).fetchall()]
+        if 'slot_open' not in exam_columns:
+            db.session.execute(db.text('ALTER TABLE exam ADD COLUMN slot_open BOOLEAN DEFAULT 0'))
+            db.session.commit()
         old_user = User.query.filter_by(email='admin@example.com').first()
         if not old_user:
             user = User(name='admin', email='admin@example.com', password='admin', role='admin')

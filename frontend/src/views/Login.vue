@@ -43,10 +43,11 @@ const login = async () =>{
             localStorage.setItem('token', response.data.token)
             localStorage.setItem('role', response.data.role)
             localStorage.setItem('name', response.data.name)
+            localStorage.setItem('user_id', response.data.user_id)
             if (response.data.role === 'admin') {
                 router.push('/admin')
             } else if (response.data.role === 'examinor') {
-                router.push('/manage_examination')
+                router.push('/examinor')
             } else if (response.data.role === 'user') {
                 router.push('/user')
             }
