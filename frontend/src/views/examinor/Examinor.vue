@@ -3,6 +3,7 @@
     <div>
         <h1>Examinor</h1>
         <p v-if="name">Welcome, {{ name }}</p>
+        <p><a href="/view_booking">View Booking</a></p>
         <h2>Create Profile</h2>
     </div>
     {{ responce_frontend }}

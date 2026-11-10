@@ -31,6 +31,8 @@
               <button @click="toggle_slot(examination)">{{ examination.slot_open ? 'Close Slot' : 'Open Slot' }}</button>
               <br>
               <button @click="view_slot(examination.id)">View Slot</button>
+              <br>
+              <button @click="view_detail(examination.id)">View Detail</button>
             </td>
           </tr>
         </tbody>
@@ -63,6 +65,10 @@ const manage_rubric = async(examination_id)=>{
 
 const view_slot = (examination_id) => {
   router.push(`/view_slot/${examination_id}`)
+}
+
+const view_detail = (examination_id) => {
+  router.push(`/admin_exam_detail/${examination_id}`)
 }
 
 const toggle_slot = async (examination) => {

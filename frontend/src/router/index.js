@@ -11,12 +11,19 @@ import ManageCourse from '../views/admin_pages/ManageCourse.vue'
 import EditCourse from '../views/admin_pages/EditCourse.vue'
 import ManageExaminor from '../views/admin_pages/ManageExaminor.vue'
 import ManageExamination from '../views/admin_pages/ManageExamination.vue'
+import AdminExamDetail from '../views/admin_pages/AdminExamDetail.vue'
 import CreateQuestionBank from '../views/admin_pages/CreateQuestionBank.vue'
 import ManageRubric from '../views/admin_pages/ManageRubric.vue'
 import Examinor from '../views/examinor/Examinor.vue'
 import AssignedExamination from '../views/examinor/AssignedExamination.vue'
 import CreateSlot from '../views/examinor/CreateSlot.vue'
 import ViewSlot from '../views/examinor/ViewSlot.vue'
+import ViewBooking from '../views/examinor/ViewBooking.vue'
+import GiveMarks from '../views/examinor/GiveMarks.vue'
+import User from '../views/user/User.vue'
+import SeeExamination from '../views/user/SeeExamination.vue'
+import ExamDetail from '../views/user/ExamDetail.vue'
+import MyBooking from '../views/user/MyBooking.vue'
 const routes = [
 
   {
@@ -64,6 +71,10 @@ const routes = [
     component: ManageExamination
   },
   {
+    path: '/admin_exam_detail/:examination_id', // http://localhost:5173/admin_exam_detail/:examination_id
+    component: AdminExamDetail
+  },
+  {
     path: '/create-questionbank/:examination_id', // http://localhost:5173/create-questionbank/:examination_id
     component: CreateQuestionBank
   },
@@ -87,6 +98,30 @@ const routes = [
   {
     path: '/view_slot/:examination_id', // http://localhost:5173/view_slot/:examination_id
     component: ViewSlot
+  },
+  {
+    path: '/view_booking', // http://localhost:5173/view_booking
+    component: ViewBooking
+  },
+  {
+    path: '/give_marks/:booking_id', // http://localhost:5173/give_marks/:booking_id
+    component: GiveMarks
+  },
+  {
+    path: '/user', // http://localhost:5173/user
+    component: User
+  },
+  {
+    path: '/see_examination', // http://localhost:5173/see_examination
+    component: SeeExamination
+  },
+  {
+    path: '/exam_detail/:examination_id', // http://localhost:5173/exam_detail/:examination_id
+    component: ExamDetail
+  },
+  {
+    path: '/my_booking', // http://localhost:5173/my_booking
+    component: MyBooking
   }
 ]
 

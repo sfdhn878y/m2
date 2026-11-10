@@ -13,10 +13,13 @@
         <template v-else-if="role === 'examinor'">
           <a href="/examinor" >Home</a>
           <a href="/assigned_examination" >Assigned Examination</a>
+          <a href="/view_booking" >View Booking</a>
         </template>
 
         <template v-else>
-          <a href="/" >Home</a>
+          <a href="/user" >Home</a>
+          <a href="/see_examination" >See Examination</a>
+          <a href="/my_booking" >My Booking</a>
         </template>
 
         <button class="logout-btn" @click.prevent="logout">Logout</button>
