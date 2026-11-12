@@ -18,11 +18,23 @@
     <strong>{{ stats.examinors }}</strong>
     <span>Examiners</span>
   </div>
+  <div class="stat">
+    <strong>{{ stats.slots }}</strong>
+    <span>Slots</span>
+  </div>
+  <div class="stat">
+    <strong>{{ stats.bookings }}</strong>
+    <span>Bookings</span>
+  </div>
 </div>
 <div class="links">
   <a href="/create_course">Create Course</a>
   <a href="/create_examination">Create examination</a>
-  <a href="/create_examinor">Create examinor</a>
+  <a href="/create_examinor">Create examiner</a>
+  <a href="/manage_students">Students</a>
+  <a href="/manage_bookings">Bookings</a>
+  <a href="/reports">Reports</a>
+  <a href="/admin_search">Search</a>
 </div>
 </template>
 <script setup>
@@ -34,7 +46,9 @@ const stats = ref({
   courses: 0,
   exams: 0,
   students: 0,
-  examinors: 0
+  examinors: 0,
+  slots: 0,
+  bookings: 0
 })
 
 const get_stats = async () => {
@@ -46,7 +60,6 @@ onMounted(() => {
   get_stats()
 })
 </script>
-
 <style scoped>
 .stats {
   display: flex;

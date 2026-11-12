@@ -8,7 +8,8 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Status</th>
                     <th>Course</th>
                     <th>Slot Start</th>
                     <th>Slot End</th>
@@ -25,7 +26,8 @@
                 </tr>
                 <tr v-for="examination in examinations" :key="examination.id">
                     <td>{{ examination.name }}</td>
-                    <td>{{ examination.description }}</td>
+                    <td>{{ examination.exam_type }}</td>
+                    <td>{{ examination.status }}</td>
                     <td>{{ examination.course_name }}</td>
                     <td>{{ examination.examinor_slot_create_start_date }}</td>
                     <td>{{ examination.examinor_slot_create_end_date }}</td>
@@ -38,6 +40,8 @@
                         <span v-else>Outside slot dates</span>
                         <br>
                         <a :href="'/view_slot/' + examination.id">View Slot</a>
+                        <br>
+                        <button v-if="examination.status !== 'Completed'" @click="markCompleted(examination.id)">Mark completed</button>
                     </td>
                 </tr>
             </tbody>
@@ -73,6 +77,11 @@ const fetchAssignedExaminations = async () => {
         examinor_id: localStorage.getItem('user_id')
     })
     examinations.value = response.data.data
+}
+
+const markCompleted = async (id) => {
+    await axios.post(`http://127.0.0.1:5000/mark_exam_completed/${id}`)
+    fetchAssignedExaminations()
 }
 
 onMounted(() => {

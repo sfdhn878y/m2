@@ -5,9 +5,13 @@
       <template v-if="loggedIn">
         <template v-if="role === 'admin'">
           <a href="/admin">Home</a>
-          <a href="/manage_course" >Manage Course</a>
-          <a href="/manage_examination" >Manage Examination</a>
-          <a href="/manage_examinor" >Manage Examinor</a>
+          <a href="/manage_course" >Courses</a>
+          <a href="/manage_examination" >Examinations</a>
+          <a href="/manage_examinor" >Examiners</a>
+          <a href="/manage_students" >Students</a>
+          <a href="/manage_bookings" >Bookings</a>
+          <a href="/reports" >Reports</a>
+          <a href="/admin_search" >Search</a>
         </template>
 
         <template v-else-if="role === 'examinor'">
@@ -18,8 +22,9 @@
 
         <template v-else>
           <a href="/user" >Home</a>
-          <a href="/see_examination" >See Examination</a>
-          <a href="/my_booking" >My Booking</a>
+          <a href="/see_examination" >Examinations</a>
+          <a href="/my_booking" >My Bookings</a>
+          <a href="/my_results" >Results</a>
         </template>
 
         <button class="logout-btn" @click.prevent="logout">Logout</button>

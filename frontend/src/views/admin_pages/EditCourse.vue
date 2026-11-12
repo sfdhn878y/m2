@@ -5,10 +5,15 @@
     </div>
     {{ response_frontend_1 }}
     <form>
+        <input type="text"  placeholder="Course Code" v-model="course_code" />
         <input type="text"  placeholder="Course Name" v-model="course_name" />
         <input type="text"  placeholder="Course Description" v-model="course_description" />
         <input type="number"  placeholder="Course Duration" v-model="course_duration" />
-        <button @click="edit_course">Update Course</button>
+        <select v-model="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+        <button type="button" @click="edit_course">Update Course</button>
     </form>
 </template>
 <script setup>
@@ -20,25 +25,31 @@ const route = useRoute()
 const id = route.params.id
 const response_frontend = ref({})
 const response_frontend_1 = ref('')
+const course_code = ref('')
 const course_name = ref('')
 const course_description = ref('')
 const course_duration = ref('')
+const status = ref('Active')
 
 const get_course_data_specific   = async () => {
     const response = await axios.post(`http://127.0.0.1:5000/get_course_data_specific/${id}`)
     response_frontend.value = response.data.data
+    course_code.value = response_frontend.value.course_code
     course_name.value = response_frontend.value.name
     course_description.value = response_frontend.value.description
     course_duration.value = response_frontend.value.duration
+    status.value = response_frontend.value.status
 }
 const edit_course = async () => {
     const response = await axios.post(`http://127.0.0.1:5000/edit_course/${id}`, 
     
     { 
         
+        course_code: course_code.value,
         name: course_name.value,
         description: course_description.value,
-        duration: course_duration.value 
+        duration: course_duration.value,
+        status: status.value 
 
 
     })

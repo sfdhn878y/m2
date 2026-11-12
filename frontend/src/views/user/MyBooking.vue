@@ -8,20 +8,26 @@
                     <th>Exam</th>
                     <th>Slot date</th>
                     <th>Slot time</th>
+                    <th>Status</th>
+                    <th>Marks</th>
+                    <th>Remarks</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="bookings.length === 0">
-                    <td colspan="4">No booking</td>
+                    <td colspan="7">No booking</td>
                 </tr>
                 <tr v-for="booking in bookings" :key="booking.id">
                     <td>{{ booking.name }}</td>
                     <td>{{ booking.slot_date }}</td>
                     <td>{{ booking.slot_time }}</td>
+                    <td>{{ booking.status }}</td>
+                    <td>{{ booking.marks }}</td>
+                    <td>{{ booking.remarks }}</td>
                     <td>
                         <a :href="'/exam_detail/' + booking.exam_id">View Detail</a>
-                        <button v-if="booking.booking_open" @click="cancelSlot(booking.slot_id)">Cancel Slot</button>
+                        <button v-if="booking.status === 'Booked' && booking.booking_open" @click="cancelSlot(booking.slot_id)">Cancel</button>
                     </td>
                 </tr>
             </tbody>

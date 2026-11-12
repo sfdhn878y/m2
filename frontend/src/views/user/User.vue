@@ -1,7 +1,15 @@
 <template>
     <Navbar />
     <div>
-        <h1>User</h1>
+        <h1>Student</h1>
+        <div class="stats">
+            <div class="stat"><strong>{{ stats.available_exams }}</strong><span>Available exams</span></div>
+            <div class="stat"><strong>{{ stats.available_slots }}</strong><span>Available slots</span></div>
+            <div class="stat"><strong>{{ stats.upcoming }}</strong><span>Upcoming</span></div>
+            <div class="stat"><strong>{{ stats.booked }}</strong><span>Booked</span></div>
+            <div class="stat"><strong>{{ stats.results }}</strong><span>Published results</span></div>
+        </div>
+        <p><a href="/see_examination">Examinations</a> <a href="/my_booking">Bookings</a> <a href="/my_results">Results</a></p>
         <h2>{{ profile_id ? 'Edit Profile' : 'Create Profile' }}</h2>
     </div>
     {{ message }}
@@ -23,6 +31,7 @@ const phone = ref('')
 const past_experience = ref('')
 const message = ref('')
 const profile_id = ref(null)
+const stats = ref({ available_exams: 0, available_slots: 0, upcoming: 0, booked: 0, results: 0 })
 
 const getProfile = async () => {
     const response = await axios.post('http://127.0.0.1:5000/get_user_profile', {
@@ -50,7 +59,16 @@ const submitForm = async () => {
     getProfile()
 }
 
-onMounted(() => {
+onMounted(async () => {
     getProfile()
+    const response = await axios.post('http://127.0.0.1:5000/student_dashboard', {
+        user_id: localStorage.getItem('user_id')
+    })
+    stats.value = response.data.data
 })
 </script>
+<style scoped>
+.stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 24px; }
+.stat { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 16px 24px; min-width: 140px; }
+.stat strong { display: block; font-size: 28px; }
+</style>

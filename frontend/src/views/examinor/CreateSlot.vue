@@ -18,9 +18,14 @@
             <input type="time" v-model="slot_time" required>
         </label>
         <label>
+            End time
+            <input type="time" v-model="end_time" required>
+        </label>
+        <label>
             Capacity
             <input type="number" v-model="capacity" min="1" required>
         </label>
+        <input type="text" v-model="meeting_link" placeholder="Meeting link (optional)">
         <button type="submit">Create Slot</button>
     </form>
 </template>
@@ -34,7 +39,9 @@ import { useRoute } from 'vue-router'
 const examination_id = useRoute().params.examination_id
 const slot_date = ref('')
 const slot_time = ref('')
+const end_time = ref('')
 const capacity = ref(1)
+const meeting_link = ref('')
 const responce_frontend = ref('')
 const slot_start = ref('')
 const slot_end = ref('')
@@ -81,7 +88,9 @@ const createSlot = async () => {
     const response = await axios.post(`http://127.0.0.1:5000/create_slot/${examination_id}`, {
         slot_date: slot_date.value,
         slot_time: slot_time.value,
+        end_time: end_time.value,
         capacity: capacity.value,
+        meeting_link: meeting_link.value,
         examinor_id: localStorage.getItem('user_id')
     })
     responce_frontend.value = response.data.message

@@ -13,6 +13,7 @@
                     <th>Criterion</th>
                     <th>Description</th>
                     <th>Max marks</th>
+                    <th>Weightage</th>
                     <th>Marks</th>
                 </tr>
             </thead>
@@ -21,12 +22,14 @@
                     <td>{{ rubric.criterion }}</td>
                     <td>{{ rubric.description }}</td>
                     <td>{{ rubric.max_marks }}</td>
+                    <td>{{ rubric.weightage }}</td>
                     <td>
                         <input type="number" v-model="rubric.marks" min="0" :max="rubric.max_marks" required>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <textarea v-model="remarks" placeholder="Remarks"></textarea>
         <button type="submit">Save Marks</button>
     </form>
 </template>
@@ -41,6 +44,7 @@ const booking_id = useRoute().params.booking_id
 const exam_name = ref('')
 const student_name = ref('')
 const rubrics = ref([])
+const remarks = ref('')
 const message = ref('')
 
 const getBooking = async () => {
@@ -48,10 +52,12 @@ const getBooking = async () => {
     exam_name.value = response.data.data.exam_name
     student_name.value = response.data.data.student_name
     rubrics.value = response.data.data.rubrics
+    remarks.value = response.data.data.remarks || ''
 }
 
 const saveMarks = async () => {
     const response = await axios.post(`http://127.0.0.1:5000/give_marks/${booking_id}`, {
+        remarks: remarks.value,
         rubrics: rubrics.value.map(rubric => ({
             question_id: rubric.id,
             marks: rubric.marks

@@ -28,7 +28,8 @@ form {
 }
 
 input,
-select {
+select,
+textarea {
   width: 320px;
   max-width: 100%;
   padding: 8px 10px;

@@ -10,12 +10,14 @@
                     <th>Slot date</th>
                     <th>Slot time</th>
                     <th>Marks</th>
+                    <th>Remarks</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="bookings.length === 0">
-                    <td colspan="6">No booking</td>
+                    <td colspan="8">No booking</td>
                 </tr>
                 <tr v-for="booking in bookings" :key="booking.id">
                     <td>{{ booking.name }}</td>
@@ -23,6 +25,8 @@
                     <td>{{ booking.slot_date }}</td>
                     <td>{{ booking.slot_time }}</td>
                     <td>{{ booking.marks }}</td>
+                    <td>{{ booking.remarks }}</td>
+                    <td>{{ booking.evaluation_status }}</td>
                     <td>
                         <a :href="'/give_marks/' + booking.id">Give Marks</a>
                     </td>

@@ -24,6 +24,12 @@ import User from '../views/user/User.vue'
 import SeeExamination from '../views/user/SeeExamination.vue'
 import ExamDetail from '../views/user/ExamDetail.vue'
 import MyBooking from '../views/user/MyBooking.vue'
+import ManageStudents from '../views/admin_pages/ManageStudents.vue'
+import AllBookings from '../views/admin_pages/AllBookings.vue'
+import EditExam from '../views/admin_pages/EditExam.vue'
+import Reports from '../views/admin_pages/Reports.vue'
+import AdminSearch from '../views/admin_pages/AdminSearch.vue'
+import MyResults from '../views/user/MyResults.vue'
 const routes = [
 
   {
@@ -122,6 +128,30 @@ const routes = [
   {
     path: '/my_booking', // http://localhost:5173/my_booking
     component: MyBooking
+  },
+  {
+    path: '/manage_students',
+    component: ManageStudents
+  },
+  {
+    path: '/manage_bookings',
+    component: AllBookings
+  },
+  {
+    path: '/edit_exam/:examination_id',
+    component: EditExam
+  },
+  {
+    path: '/reports',
+    component: Reports
+  },
+  {
+    path: '/admin_search',
+    component: AdminSearch
+  },
+  {
+    path: '/my_results',
+    component: MyResults
   }
 ]
 

@@ -6,6 +6,14 @@
     <form @submit.prevent="createExam">
         <input type="text" v-model="examName" placeholder="Exam Name">
         <input type="text" v-model="examDescription" placeholder="Exam Description">
+        <select v-model="examType">
+            <option value="Viva">Viva</option>
+            <option value="Practical">Practical</option>
+            <option value="Project Demo">Project Demo</option>
+            <option value="Assessment">Assessment</option>
+        </select>
+        <input type="number" v-model="duration" placeholder="Duration in minutes">
+        <input type="number" v-model="maxMarks" placeholder="Maximum marks">
         <label>
             Slot start date
             <input type="date" v-model="examinor_slot_create_start_date" required>
@@ -59,6 +67,9 @@ const examinor_data_list = ref([]);
 const course_data_list = ref([]);
 const examName = ref('');
 const examDescription = ref('');
+const examType = ref('Viva');
+const duration = ref(30);
+const maxMarks = ref(100);
 const examinor_slot_create_start_date = ref('');
 const examinor_slot_create_end_date = ref('');
 const booking_start_time = ref('');
@@ -90,6 +101,9 @@ const createExam = async () => {
         {
            exam_name: examName.value,
            exam_description: examDescription.value,
+           exam_type: examType.value,
+           duration: duration.value,
+           max_marks: maxMarks.value,
            examinor_slot_create_start_date: examinor_slot_create_start_date.value,
            examinor_slot_create_end_date: examinor_slot_create_end_date.value,
            booking_start_time: booking_start_time.value,

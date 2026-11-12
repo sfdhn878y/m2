@@ -7,9 +7,11 @@
             <thead>
                 <tr>
                     <th>Course ID</th>
+                    <th>Code</th>
                     <th>Course Name</th>
                     <th>Description</th>
                     <th>Duration</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -17,9 +19,11 @@
             <tbody>
                 <tr v-for="course in course_data_list" :key="course.id">
                     <td>{{ course.id }}</td>
+                    <td>{{ course.course_code }}</td>
                     <td>{{ course.name }}</td>
                     <td>{{ course.description }}</td>
                     <td>{{ course.duration }}</td>
+                    <td>{{ course.status }}</td>
                     <td>
                         <button @click="edit_course(course.id)">Edit</button>
                         <button @click="delete_course(course.id)">Delete</button>
@@ -44,7 +48,8 @@ const edit_course = async (id) => {
     router.push(`/edit_course/${id}`)
 }
 const delete_course = async (id) => {
-    const response = await axios.post(`http://127.0.0.1:5000/delete_course/${id}`)
+    await axios.post(`http://127.0.0.1:5000/delete_course/${id}`)
+    get_course_data()
 }
 
 onMounted(() => {
